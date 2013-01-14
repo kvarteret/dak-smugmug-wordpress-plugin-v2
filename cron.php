@@ -23,13 +23,13 @@ $dbPass = "pass";
 $smugObject = new phpSmug( "APIKey=" . $apiKey, "AppName=" . $AppNameVersion . "(" . $domain . ")" );
 
 $smugObject->login( "EmailAddress=" . $mailAdress, "Password=" .$password );
+
+//error message in cache function from phpSmug. No Cache is used.
 //$smugObject->enableCache();
 
 $albums = $smugObject->albums_get();
 
 $db_albums = array();
-
-//DEBUG var_dump($albums);
 
 
 //get all album id's from database
