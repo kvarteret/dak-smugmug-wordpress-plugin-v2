@@ -5,6 +5,3 @@ Wordpress plugin files to get photos from smugmug and display on a Wordpress sit
 
 When a new album is uploaded to smugmug, a custom post will be posted in the wordpress site of type
  "dak_smugmug_album", and have the mode "Draft".
-
-
-Updated code stored locally at Per's computer, was pushed but is reverted because of passwords in the code.
