@@ -7,4 +7,4 @@ When a new album is uploaded to smugmug, a custom post will be posted in the wor
  "dak_smugmug_album", and have the mode "Draft".
 
 
-Updated code stored locally at Per's computer, was pushed but is reverted because of passwords in the code.
+This is still just a work in progress, and for now it does not create a new draft. This is TODO.
