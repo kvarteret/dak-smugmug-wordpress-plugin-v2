@@ -6,9 +6,17 @@
 
 require_once "phpSmug/phpSmug.php";
 
-$smugObject = new phpSmug( "APIKey=7DlM62R4ONejovMu7zSGtdWHMoJbsKk9", "AppName=kvarteret/1.0 (http://www.perandersen.no)" );
+$apiKey = "INSERT API KEY";
+$AppNameVersion = "AppName/VersionNo";
+$domain = "http://www.domain.com";
 
-$smugObject->login( "EmailAddress=eksponeringsetaten@gmail.com", "Password=stjernesalen" );
+$mailAdress = "mail@useraccounatsmug.com";
+$password = "password";
+
+
+$smugObject = new phpSmug( "APIKey=" . $apiKey, "AppName=" . $AppNameVersion . "(" . $domain . ")" );
+
+$smugObject->login( "EmailAddress=" . $mailAdress, "Password=" .$password );
 //$smugObject->enableCache();
 
 $albums = $smugObject->albums_get();
