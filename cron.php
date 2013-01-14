@@ -9,16 +9,16 @@
 require_once "phpSmug/phpSmug.php";
 
 $apiKey = "apikey";
-$AppNameVersion = "appname/1.0";
-$domain = "http://www.domain.no";
+$AppNameVersion = "kvarteret/1.0";
+$domain = "http://www.kvarteret.no";
 
-$mailAdress = "whatever@gmail.com";
-$password = "pass";
+$mailAdress = "mail@domain.com";
+$password = "password";
 
 $dbName = "smugTemp";
 
-$dbUser = "dbuser";
-$dbPass = "dbpass";
+$dbUser = "root";
+$dbPass = "pass";
 
 $smugObject = new phpSmug( "APIKey=" . $apiKey, "AppName=" . $AppNameVersion . "(" . $domain . ")" );
 
@@ -35,7 +35,7 @@ $db_albums = array();
 //get all album id's from database
 
 try {
-    $dbh = new PDO('mysql:host=localhost;dbname=" . $dbName', $dbUser, $dbPass);
+    $dbh = new PDO('mysql:host=localhost;dbname=' . $dbName, $dbUser, $dbPass);
 		    foreach($dbh->query('SELECT id from albums') as $row) {
 		    	array_push($db_albums, $row);
 		}	
@@ -64,6 +64,8 @@ try {
 //Function for adding new album to the db and creating a draft in wp.
 function addNewAlbum($album, $dbh) {
 	
+	global $dbName;
+	
 	echo "called addNewAlbum";
 	var_dump($album['id']);
 	echo $album['id'];
@@ -71,7 +73,7 @@ function addNewAlbum($album, $dbh) {
 	
 	//if it succeded add the id to the database
 	
-	$statement = "INSERT INTO `smugTemp`.`albums` (`id`) VALUES ('" . $album['id'] . "')";
+	$statement = "INSERT INTO `" . $dbName . "`.`albums` (`id`) VALUES ('" . $album['id'] . "')";
 	echo $statement;
 	try {
 		$sth = $dbh->prepare($statement);
