@@ -2,17 +2,23 @@
 // /*
 // This script is a cron job. It checks the Smugmug site and calls an XML-RPC function if there are any new
 // albums on the specified user's account.
+// 
+// NEEDS A DB SET UP WITH THE TABLE "ALBUMS" WITH AN INT COLUMN CALLED "ID" AND ALL VARIABLES SET BENEATH
 // */
 
 require_once "phpSmug/phpSmug.php";
 
-$apiKey = "INSERT API KEY";
-$AppNameVersion = "AppName/VersionNo";
-$domain = "http://www.domain.com";
+$apiKey = "apikey";
+$AppNameVersion = "appname/1.0";
+$domain = "http://www.domain.no";
 
-$mailAdress = "mail@useraccounatsmug.com";
-$password = "password";
+$mailAdress = "whatever@gmail.com";
+$password = "pass";
 
+$dbName = "smugTemp";
+
+$dbUser = "dbuser";
+$dbPass = "dbpass";
 
 $smugObject = new phpSmug( "APIKey=" . $apiKey, "AppName=" . $AppNameVersion . "(" . $domain . ")" );
 
@@ -29,7 +35,7 @@ $db_albums = array();
 //get all album id's from database
 
 try {
-    $dbh = new PDO('mysql:host=localhost;dbname=smugTemp', "root", "jur8ucib");
+    $dbh = new PDO('mysql:host=localhost;dbname=" . $dbName', $dbUser, $dbPass);
 		    foreach($dbh->query('SELECT id from albums') as $row) {
 		    	array_push($db_albums, $row);
 		}	
