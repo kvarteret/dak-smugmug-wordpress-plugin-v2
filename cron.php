@@ -66,23 +66,24 @@ function addNewAlbum($album, $dbh) {
 	
 	global $dbName;
 	
-	echo "called addNewAlbum";
-	var_dump($album['id']);
-	echo $album['id'];
-	//make the draft
-	
+	//TODO make the draft
+	$draftMade = TRUE;
 	//if it succeded add the id to the database
 	
-	$statement = "INSERT INTO `" . $dbName . "`.`albums` (`id`) VALUES ('" . $album['id'] . "')";
-	echo $statement;
-	try {
-		$sth = $dbh->prepare($statement);
-		$sth->execute();		
+	if($draftMade) {
+		$statement = "INSERT INTO `" . $dbName . "`.`albums` (`id`) VALUES ('" . $album['id'] . "')";
+		echo $statement;
+		try {
+			$sth = $dbh->prepare($statement);
+			$sth->execute();		
+		}
+		catch (PDOException $e) { 
+			print "Error!: " . $e->getMessage() . "<br/>";
+  		  	die();
+		}		
 	}
-	catch (PDOException $e) { 
-		print "Error!: " . $e->getMessage() . "<br/>";
-    	die();
-	}
+	
+
 	
 }	
 
