@@ -1454,7 +1454,7 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 		$context = stream_context_create( $options );
 
 		// perform the actual request - we use fopen so stream_get_meta_data works
-		$fh = @fopen( $url, 'r', false, $context );
+		$fh = fopen( $url, 'r', false, $context );
 		if ( $fh === false ) {
 			throw new Exception( 'Unable to connect to ' . $urlbits['host'] );
 		}
