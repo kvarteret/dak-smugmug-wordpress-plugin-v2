@@ -32,7 +32,6 @@ $smugObject->login( "EmailAddress=" . $mailAdress, "Password=" .$password );
 $albums = $smugObject->albums_get();
 
 $db_albums = array();
-echo "checking";
 
 //get all album id's from database
 
