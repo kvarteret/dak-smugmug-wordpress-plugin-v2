@@ -37,80 +37,77 @@ echo "checking";
 //get all album id's from database
 
 try {
-    $dbh = new PDO('mysql:host=localhost;dbname=' . $dbName, $dbUser, $dbPass);
-		    foreach($dbh->query('SELECT id from albums') as $row) {
-		    	array_push($db_albums, $row);
-		}	
+	$dbh = new PDO('mysql:host=localhost;dbname=' . $dbName, $dbUser, $dbPass);
+	foreach($dbh->query('SELECT id from albums') as $row) {
+		array_push($db_albums, $row);
+	}	
 	
 } catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
+	print "Error!: " . $e->getMessage() . "<br/>";
+	die();
 }
 
-echo count($albums) . "\n";
+error_log(count($albums) . "\n");
 
 //compare to albums in $albums array
-	foreach ($albums as $album) {
-    		$isInDb = false;
+foreach ($albums as $album) {
+	$isInDb = false;
 
-			foreach($db_albums as $db_album) {
-				if($db_album['id'] == $album['id']) {
-					$isInDb = true;
-				}
-			}
+	foreach($db_albums as $db_album) {
+		if($db_album['id'] == $album['id']) {
+			$isInDb = true;
+		}
+	}
 
-			if(!$isInDb) {
-				addNewAlbum($album, $dbh);
-			}
-    	}		
+	if(!$isInDb) {
+		addNewAlbum($album, $dbh);
+	}
+}		
 
-    $dbh = null;
+$dbh = null;
 
 //Function for adding new album to the db and creating a draft in wp.
 function addNewAlbum($album, $dbh) {
 	global $dbName;
-	 $check = false;
-	echo "inside add new album";
+	$albumIsPosted = false;
+	error_log("inside add new album");
 	//TODO make the draft
 	$draftMade = TRUE;
 	//if it succeded add the id to the database
 	
 	if($draftMade) {
 		$statement = "INSERT INTO `albums` (`id`) VALUES ('" . $album['id'] . "')";
-		echo $statement . "\n";
+		error_log($statement . "\n");
 		try {
 			$sth = $dbh->prepare($statement);
 			$sth->execute();	
-			$check=true;	
+			$albumIsPosted=true;	
 		}
 		catch (PDOException $e) { 
 			print "Error!: " . $e->getMessage() . "<br/>";
-  		  	die();
+			die();
 		}		
 	}
 
-	if($check)
+	if($albumIsPosted)
 	{
 		$new_post = array(
-'post_title' => 'New Album',
-'post_content' => "[Hello album_id={$album['id']} album_key={$album['Key']}]",
-'post_status' => 'draft',
-'post_date' => date('Y-m-d H:i:s'),
+			'post_title' => 'New Album',
+			'post_content' => "[DakSmugInsert album_id={$album['id']} album_key={$album['Key']}]",
+			'post_status' => 'draft',
+			'post_date' => date('Y-m-d H:i:s'),
 //'post_author' => $user_ID,
-'post_type' => 'post',
-'post_category' => array(0)
-);
+			'post_type' => 'post',
+			'post_category' => array(0)
+			);
 		//echo "creating posts";
-$post_id = wp_insert_post($new_post,true);
-if ( is_wp_error( $post_id ) ) {
-   $error_string = $post_id->get_error_message();
-   echo '<div id="message" class="error"><p>' . $error_string . '</p></div>';
+		$post_id = wp_insert_post($new_post,true);
+		if ( is_wp_error( $post_id ) ) {
+			$error_string = $post_id->get_error_message();
+			echo '<div id="message" class="error"><p>' . $error_string . '</p></div>';
+		}
+	}	
 }
-	}
-	
-
-	
-}	
 
 
 ?>

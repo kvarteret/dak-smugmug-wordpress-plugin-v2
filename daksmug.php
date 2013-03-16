@@ -60,7 +60,7 @@ require_once "phpSmug/phpSmug.php";
        echo "<img src='" . $image['MediumURL'] . "' /><br/>";
     }
 
-	echo "hello world woooooogfvkfhdggdbghd, albumid: " . $args['album_id'];
+	//echo "hello world woooooogfvkfhdggdbghd, albumid: " . $args['album_id'];
 	print_r($images);
 }
 
