@@ -35,7 +35,7 @@ $db_albums = array();
 
 //get all album id's from database
 
-try {
+/*try {
 	$dbh = new PDO('mysql:host=localhost;dbname=' . $dbName, $dbUser, $dbPass);
 	foreach($dbh->query('SELECT id from albums') as $row) {
 		array_push($db_albums, $row);
@@ -44,6 +44,11 @@ try {
 } catch (PDOException $e) {
 	print "Error!: " . $e->getMessage() . "<br/>";
 	die();
+}*/
+$table_name = $wpdb->prefix.'Dak_SmugMug_Albums';
+
+foreach($wpdb->get_results( "SELECT id, album_id FROM ". $table_name ) as $row) {
+	array_push($db_albums, $row);
 }
 
 error_log(count($albums) . "\n");
@@ -59,14 +64,12 @@ foreach ($albums as $album) {
 	}
 
 	if(!$isInDb) {
-		addNewAlbum($album, $dbh);
+		addNewAlbum($album);
 	}
-}		
-
-$dbh = null;
+}	
 
 //Function for adding new album to the db and creating a draft in wp.
-function addNewAlbum($album, $dbh) {
+function addNewAlbum($album) {
 	global $dbName;
 	$albumIsPosted = false;
 	error_log("inside add new album");
@@ -75,7 +78,7 @@ function addNewAlbum($album, $dbh) {
 	//if it succeded add the id to the database
 	
 	if($draftMade) {
-		$statement = "INSERT INTO `albums` (`id`) VALUES ('" . $album['id'] . "')";
+/*		$statement = "INSERT INTO `albums` (`id`) VALUES ('" . $album['id'] . "')";
 		error_log($statement . "\n");
 		try {
 			$sth = $dbh->prepare($statement);
@@ -86,6 +89,9 @@ function addNewAlbum($album, $dbh) {
 			print "Error!: " . $e->getMessage() . "<br/>";
 			die();
 		}		
+*/
+		$sql + $wpdb->insert($table_name, 'album_id' => $album['album_id']);
+		
 	}
 
 	if($albumIsPosted)
