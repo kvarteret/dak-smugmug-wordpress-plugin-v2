@@ -24,30 +24,30 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-    global $wpdb;
     require_once "phpSmug/phpSmug.php";
     add_shortcode("DakSmugInsert","DakSmugInsert");
+    add_action('fetchAlbums', 'runCron');
+    add_filter( 'cron_schedules', 'cron_add_seconds' );
+    // adding administration menu to the plugin
+    add_action('Dak_SmugMug_Admin_Menu','plugin_menu');
+    add_action( 'admin_init', 'dak_smugmug_admin_init' );
 //add_action("init","activation");
     register_activation_hook(__FILE__, 'activation');
     register_deactivation_hook(__FILE__, 'my_deactivation');
-    add_action('fetchAlbums', 'runCron');
-    add_filter( 'cron_schedules', 'cron_add_seconds' );
+    
     /* args should contain album_id and album_key */
     function DakSmugInsert($args)
     {
 
 	//global $apiKey, $mailAdress, $password;
        require_once "configcron.php";
-       require_once "phpSmug/phpSmug.php";
-       $AppNameVersion = "kvarteret/1.0";
-       $domain = "http://www.kvarteret.no";
 
        $album_id = $args['album_id'];
        $album_key = $args['album_key'];
 
        $smugObject = new phpSmug( "APIKey=" . $apiKey, "AppName=" . $AppNameVersion . "(" . $domain . ")" );
 
-       $smugObject->login( "EmailAddress=" . $mailAdress, "Password=" .$password );
+       $smugObject->login( "EmailAddress=" . $mailAdress, "Password=" . $password );
        $images = $smugObject->images_get("AlbumID={$album_id}", "AlbumKey={$album_key}", "Extras=MediumURL");
 
        foreach($images["Images"] as $image)
@@ -61,6 +61,7 @@ License: GPL2
 
  function runCron()
  {
+  global $wpdb;
    $smugObject = new phpSmug( "APIKey=" . $apiKey, "AppName=" . $AppNameVersion . "(" . $domain . ")" );
 $smugObject->login( "EmailAddress=" . $mailAdress, "Password=" .$password );
 
@@ -102,6 +103,7 @@ function cron_add_seconds( $schedules ) {
 
 function activation()
 {
+  global $wpdb;
   $tablename = $wpdb->prefix.'Dak_SmugMug_Albums';
   $sql = "CREATE TABLE $tablename ( 
       `album_id` VARCHAR(255) NOT NULL,  
@@ -131,6 +133,7 @@ function my_deactivation() {
 //Function for adding new album to the db and creating a draft in wp.
 function addNewAlbum($album) {
   global $dbName;
+  global $wpdb;
   $albumIsPosted = false;
   error_log("inside add new album");
   //TODO make the draft
@@ -161,3 +164,31 @@ function addNewAlbum($album) {
     }
   } 
 }
+
+function plugin_menu()
+{
+  add_options_page( 'Dak SmugMug Admin Menu', 'Dak SmugMug Admin Menu',
+   'manage_options', 'Dak_Smugmug_Menu', 'plugin_options' );
+}
+
+function plugin_options()
+{
+?>
+<div class="wrap">
+<h2> DakSmugMug Plugin settings </h2>
+<form action="options.php" method="post">
+<?php settings_fields('daksmug_settings_group'); ?>
+<?php do_settings_sections('daksmug_plugin');?>
+<?php submit_button(); ?>
+</form?
+</div>
+<?php
+}
+
+function dak_smugmug_admin_init() {
+    register_setting( 'daksmug_settings_group', 'my-setting' );
+    add_settings_section( 'section-one', 'Section One', 'section_one_callback', 'daksmug_plugin' );
+   // add_settings_field( 'field-one', 'Field One', 'field_one_callback', 'my-plugin', 'section-one' );
+}
+
+?>
