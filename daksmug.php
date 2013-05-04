@@ -40,7 +40,7 @@
       function DakSmugInsert($args)
       {
 
-  	//global $apiKey, $mailAdress, $password;
+  	
          require_once "configcron.php";
          
          $album_id = $args['album_id'];
